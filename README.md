@@ -96,43 +96,44 @@ We provide a concise SDE-based argument for DDPM convergence, matching the main-
 
 - **Forward SDE**  
   Let $w(t)$ be standard Brownian motion. The forward SDE is
-
+  
   $$\mathrm{d}x = -\frac{1}{2}\beta(t)x\mathrm{d}t + \sqrt{\beta(t)}\mathrm{d}w(t). \tag{S1}$$
-
+  
   The marginal $p_t(x)$ satisfies the Fokker–Planck equation
-
+  
   $$\frac{\partial p_t}{\partial t} = \frac{\beta(t)}{2}\nabla \cdot (x p_t) + \frac{\beta(t)}{2}\Delta p_t. \tag{S2}$$
-
+  
   Consequently,
-
+  
   $$\lim_{t\to\infty} p_t(x) = \mathcal{N}(0, I), \tag{S3}$$
-
+  
   establishing convergence of the forward process.
 
 - **Reverse SDE and score connection**  
   By Anderson's time-reversal,
-
+  
   $$\mathrm{d}x = \left[-\frac{1}{2}\beta(t)x - \beta(t)\nabla_x \log p_t(x)\right]\mathrm{d}t + \sqrt{\beta(t)}\mathrm{d}\bar{w}(t). \tag{S4}$$
-
+  
   In the DDPM parameterization, the denoiser $\epsilon_\theta(x_t,t)$ induces a score estimate
-
+  
   $$\nabla_x \log p_t(x) \approx s_\theta(x,t) \simeq -\frac{\epsilon_\theta(x_t,t)}{\sqrt{1-\bar{\alpha}_t}}, \tag{S5}$$
-
+  
   where $\bar{\alpha}_t=\prod_{s\leq t}(1-\beta_s)$ is the discrete cumulative product.
 
 - **Convergence bound**  
   Comparing the exact reverse SDE with score $\nabla_x \log p_t(x)$ and the approximate one with $s_\theta(x,t)$, Girsanov's theorem yields
-
+  
   $$D_{\mathrm{KL}}(p_0 \parallel p_\theta) \leq C \int_0^T \mathbb{E}_{p_t}\left[ \left\|\nabla_x \log p_t(x) - s_\theta(x,t)\right\|^2 \right]\mathrm{d}t, \tag{S6}$$
-
+  
   where $C$ depends on the noise schedule. Hence, as the integrated score error vanishes, the KL divergence goes to zero and $p_\theta \to p_0$.
 
 - **Implication for the DDPM loss**  
   The standard objective
-
-  $$\mathcal{L}_{\mathrm{DDPM}} = \mathbb{E}_{t,x_0,\epsilon,c}\left[ \left\|\epsilon_t - \epsilon_\theta(x_t,t,c)\right\|^2 \right] \tag{S7}$$
-
+  
+  $$\mathcal{L}_{\mathrm{DDPM}} = \mathbb{E}_{t,x_0,\epsilon,c}\left[ \left|\epsilon_t - \epsilon_\theta(x_t,t,c)\right|^2 \right] \tag{S7}$$
+  
   With sufficient capacity and convergence, often aided by conditioning $c$, $s_\theta(x,t)$ approaches the true score and sampling the reverse SDE recovers the data distribution with quantifiable error.
+
 
 ## Appendix S3. Pattern U-Net Variants: Architecture and Training Results
 
